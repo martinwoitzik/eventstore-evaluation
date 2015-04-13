@@ -4,8 +4,10 @@ var esCtrl = require('../es-controller.js');
 
 router.get('/', function(req, res, next) {
 
-  // TODO:
-  esCtrl.getProjection('projection-1');
+  // TODO
+  res.render('stream', {
+    stream: esCtrl.createStream('stream-1')
+  });
 
 });
 

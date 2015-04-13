@@ -1,3 +1,5 @@
+var http = require('http');
+
 var testES = {
 
     getProjection: function(id) {
