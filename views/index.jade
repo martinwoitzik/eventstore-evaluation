@@ -1,0 +1,15 @@
+extends layout
+
+block content
+  h1= title
+  p Welcome to #{title}
+
+  form(action="/stream", method="GET")
+    .form-group
+      .row
+        .column
+          label(for="stream_id") Stream-ID
+        .column
+          input(type="text", name="stream_id", id="stream_id")
+      .row
+        button Get stream by id

@@ -1,0 +1,21 @@
+{
+  "name": "stock-fetch",
+  "version": "0.0.1",
+  "homepage": "https://github.com/martinwoitzik/stock-fetch",
+  "authors": [
+    "Martin Woitzik <m.woitzik@gmx.de>"
+  ],
+  "moduleType": [
+    "amd"
+  ],
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+  }
+}

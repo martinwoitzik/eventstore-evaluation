@@ -1,0 +1,43 @@
+body {
+  padding: 50px;
+  font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
+}
+
+a {
+  color: #00B7FF;
+}
+
+th {
+  text-align: left;
+  border-bottom: 1px solid darkgrey;
+}
+
+th:first-child {
+  min-width: 280px;
+}
+
+.wkn {
+  color: darkgoldenrod;
+}
+
+.form-group {
+  margin-bottom: 50px;
+}
+
+.row {
+  display: block;
+  position: relative;
+}
+
+.row:last-child {
+  margin-top: 10px;
+}
+
+.column {
+  display: inline-block;
+  position: relative;
+}
+
+.column:first-child {
+  width: 150px;
+}
