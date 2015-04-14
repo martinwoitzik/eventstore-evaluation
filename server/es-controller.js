@@ -93,7 +93,21 @@ var testES = {
       });
     },
 
-    test: function() {
+    populateWithMetaData: function() {
+      var aggregateId = guid();
+      var eventType = 'domainEvent';
+      var events = [{
+        eventId: aggregateId,
+        eventType: eventType,
+        data: {
+          "name": "Martin"
+        },
+        metadata: {
+          "key": "blubb"
+        }
+      }];
+
+      this.pushDomainEvent(guid(), 'domainEvent', events);
 
     }
 
