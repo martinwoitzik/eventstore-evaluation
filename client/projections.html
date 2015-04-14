@@ -1,0 +1,129 @@
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>post projections</title>
+    <style type="text/css">#console { padding: 5px;background-color: black; color: #fff}</style>
+    <link rel="stylesheet" type="text/css" href="bootstrap.css">
+  </head>
+  <body>
+  <div class="container">
+    <h1>EventStore projections testing</h1>
+    <a href="http://127.0.0.1:2113/web/index.html" target="_blank">ES Admin console (auth: admin/changeit)</a>
+    <hr>
+
+    projection type:
+    <select class="form-control" id="type">
+        <option value="transient">transient/vorrübergehend</option>
+        <option value="continuous" selected>Continuous/fortlaufend</option>
+    </select><br>
+    projection name:
+    <input id="projName" class="form-control" type="text" value="projection1"><br>
+
+    <textarea id="ta" rows="10" cols="100">
+fromStream("newstream1")
+  .when({
+    $init: function() {
+      return { count: 0 }
+    },
+    "NAME_OF_EVENT": function(state, event) {
+      return state
+    }
+  })
+    </textarea>
+    <div>
+        <button id="submit" class="btn btn-primary">create projection</button>
+        <button id="edit" class="btn btn-primary">edit projection</button>
+        <button id="delete" class="btn btn-danger">delete projection</button>
+    </div>
+
+    <h3>console</h3>
+    <pre id="console"></pre>
+  </div>
+
+
+    <!-- all js sources here: -->
+    <script charset="utf-8" src="jquery.js"></script>
+    <script charset="utf-8" src="common.js"></script>
+
+    <script charset="utf-8">
+      $(function() {
+
+        // post projection
+        $('#submit').click(function() {
+            var json        = $('#ta').val()
+            var projName    = $('#projName').val()
+            var type        = $('#type').val()
+
+            log ("posting...", json)
+            $.ajax({
+                beforeSend: beforeSend,
+
+                contentType: 'application/json; charset=utf-8',
+                // crossDomain: true,
+                url: "http://localhost:2113/projections/"+ type +
+                    "?enabled=yes&name="+ projName +"&emit=yes&checkpoints=yes",
+
+                type: "POST",
+                dataType: "json",
+                data: json,
+                complete: function(xhr) {
+                  log("-> request complete - status: " + xhr.status +
+                    ' response text: ' + xhr.statusText + ': ' + xhr.responseText, xhr)
+                }
+            })
+        })
+
+        // edit projection
+        $('#edit').click(function() {
+            var json = $('#ta').val()
+            var projName = $('#projName').val()
+
+            log ("PUT...", json)
+
+            $.ajax({
+                beforeSend: beforeSend,
+
+                contentType: 'application/json; charset=utf-8',
+                crossDomain: true,
+                url: "http://localhost:2113/projection/"+ projName + // "PUT" AGAINST NAME HERE!
+                    "/query?emit=yes", // ...?
+
+                type: "PUT",
+                dataType: "json",
+                data: json,
+                complete: function(xhr) {
+                  log("-> PUT request complete - status: " + xhr.status +
+                    ' response text: ' + xhr.statusText + ': ' + xhr.responseText, xhr)
+                }
+            })
+        })
+
+        // delete projection
+        $('#delete').click(function() {
+            var projName = $('#projName').val()
+
+            log ("DELETE...")
+
+            $.ajax({
+                beforeSend: beforeSend,
+
+                contentType: 'application/json; charset=utf-8',
+                crossDomain: true,
+                url: "http://localhost:2113/projection/"+ projName, // "DELETE" AGAINST NAME HERE!
+                type: "DELETE",
+                dataType: "json",
+                data: {
+                    deleteCheckpointStream:"no",
+                    deleteStateStream:"no"
+                },
+                complete: function(xhr) {
+                  log("-> DELETE request complete - status: " +
+                    xhr.status + ' response text: ' + xhr.statusText + ': ' + xhr.responseText, xhr)
+                }
+            })
+        })
+    })
+    </script>
+  </body>
+</html>
+

@@ -8,6 +8,8 @@
   <div class="container">
     <h1>EventStore testing</h1>
     <a href="http://127.0.0.1:2113/web/index.html" target="_blank">ES Admin console (auth: admin/changeit)</a>
+    <br>
+    <a href="./projections.html">projection tests</a>
     <hr>
 
     <textarea id="ta" rows="10" cols="100"></textarea>
@@ -25,6 +27,8 @@
 
     <!-- all js sources here: -->
     <script charset="utf-8" src="jquery.js"></script>
+    <script charset="utf-8" src="common.js"></script>
+
     <script charset="utf-8">
     var STREAM_ID = "newstream1"
 
@@ -107,7 +111,7 @@
             dataType: "json",
             data: json,
             complete: function(xhr) {
-              log("-> success - status: " + xhr.status + ' response text: ' + xhr.statusText)
+              log("-> request complete - status: " + xhr.status + ' response text: ' + xhr.statusText)
               fillTextareaWithJSONEvent()
               fetchStream()
             }
