@@ -4,9 +4,9 @@ var esCtrl = require('../es-controller.js');
 
 router.get('/', function(req, res, next) {
 
-  // TODO
+  esCtrl.foo();
+
   res.render('stream', {
-    stream: esCtrl.createStream('stream-1')
   });
 
 });

@@ -41,3 +41,7 @@ th:first-child {
 .column:first-child {
   width: 150px;
 }
+
+input {
+  width: 300px;
+}
