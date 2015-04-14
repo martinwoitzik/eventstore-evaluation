@@ -1,0 +1,119 @@
+<html>
+  <head>
+    <title>tests</title>
+    <style type="text/css">#console { padding: 5px;background-color: black; color: #fff}</style>
+    <link rel="stylesheet" type="text/css" href="bootstrap.css">
+  </head>
+  <body>
+  <div class="container">
+    <h1>EventStore testing</h1>
+    <a href="http://127.0.0.1:2113/web/index.html" target="_blank">ES Admin console (auth: admin/changeit)</a>
+    <hr>
+
+    <textarea id="ta" rows="10" cols="100"></textarea>
+    <div><button id="submit" class="btn btn-primary">submit json</button></div>
+
+    <h3>Data from ES</h3>
+    <div id="data"></div>
+
+    <h3>console</h3>
+    <pre id="console"></pre>
+  </div>
+
+
+
+
+    <!-- all js sources here: -->
+    <script charset="utf-8" src="jquery.js"></script>
+    <script charset="utf-8">
+    var STREAM_ID = "newstream1"
+
+    window.log = function() {
+      console.log.apply(console, arguments)
+      $('#console').append(arguments[0] + '\n')
+    }
+
+    // Generate four random hex digits.
+    function S4() {
+        return (((1+Math.random())*0x10000)|0).toString(16).substring(1);
+    }
+
+    // Generate a pseudo-GUID by concatenating random hexadecimal.
+    function guid() {
+        return (S4()+S4()+'-'+S4()+'-'+S4()+'-'+S4()+'-'+S4()+S4()+S4());
+    }
+
+    function fillTextareaWithJSONEvent() {
+      var evtID = guid()
+      var json = [
+        {
+          "eventId": evtID,
+          "eventType": "NAME_OF_EVENT",
+          "data": {
+            "foo": true
+          }
+        }
+      ]
+
+      $('#ta').val(JSON.stringify(json, undefined, 2))
+    }
+
+    function fetchStream() {
+      $("#data").empty()
+      log ("Fetching stream " + STREAM_ID)
+      $.ajax({
+        contentType: 'application/vnd.eventstore.atom+json',
+        // crossDomain: true,
+        url: "http://localhost:2113/streams/"+ STREAM_ID,
+        type: "GET",
+        dataType: "json",
+        data: {
+          embed: "body"
+        },
+        success: function(json) {
+          log ("-> Fetched stream: " + json.title, json)
+          var i = 1
+          json.entries.forEach(function(entry) {
+            $("#data").append("ENTRY #" + (i++) + ': ' + ' ' + entry.title + "" + entry.updated + ' --- ID: ' + entry.id + ' payload: ' + entry.data + '<br/>')
+          })
+        }
+      })
+    }
+
+      $(function() {
+
+        fillTextareaWithJSONEvent()
+
+        fetchStream()
+
+
+        // post events
+        $('#submit').click(function() {
+          var json = $('#ta').val()
+          try {
+            JSON.parse(json);
+          }catch(e) {
+            log(e)
+            alert("JSON PARSE ERROR: " + e)
+            return false;
+          }
+
+          log ("posting...", json)
+          $.ajax({
+            contentType: 'application/vnd.eventstore.events+json',
+            // crossDomain: true,
+            url: "http://localhost:2113/streams/" + STREAM_ID,
+            type: "POST",
+            dataType: "json",
+            data: json,
+            complete: function(xhr) {
+              log("-> success - status: " + xhr.status + ' response text: ' + xhr.statusText)
+              fillTextareaWithJSONEvent()
+              fetchStream()
+            }
+          })
+        })
+      })
+    </script>
+  </body>
+</html>
