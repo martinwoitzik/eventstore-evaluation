@@ -21,19 +21,71 @@ function guid() {
 
 var testES = {
 
-    foo: function() {
-        this.pushDomainEvent({
-          eventId: guid(),
-          eventType: 'domainEvent',
-          data: {"name": "Martin"}
-        });
+    populateSingleDomainEvent: function() {
+      var aggregateId = guid();
+      var eventType = 'domainEvent';
+      var events = [{
+        eventId: aggregateId,
+        eventType: eventType,
+        data: {
+          "name": "Martin"
+        }
+      }];
+
+      this.pushDomainEvent(guid(), 'domainEvent', events);
     },
 
-    pushDomainEvent: function(event) {
+    populateMultipleDomainEvents: function() {
+      var aggregateId = guid();
+      var eventType = 'domainEvent';
+      var events = [{
+        eventId: aggregateId,
+        eventType: eventType,
+        data: {
+          "name": "Martin"
+        }
+      },
+      {
+        eventId: aggregateId,
+        eventType: eventType,
+        data: {
+          "name": "Ferdinand"
+        }
+      },
+      {
+        eventId: aggregateId,
+        eventType: eventType,
+        data: {
+          "name": "Alex"
+        }
+      }];
+
+      this.pushDomainEvent(aggregateId, eventType, events);
+    },
+
+    populateMassiveAmountOfDomainEvents: function() {
+      var aggregateId = guid();
+      var eventType = 'domainEvent';
+      var events = [];
+      var i;
+      for (i=0; i<999999; i++) {
+        events.push({
+          eventId: aggregateId,
+          eventType: eventType,
+          data: {
+            "randomValue": "random number " + (Math.random() * 1000000)
+          }
+        });
+      }
+
+      this.pushDomainEvent(aggregateId, eventType, events);
+    },
+
+    pushDomainEvent: function(aggregateId, aggregateType, events) {
         request({
-          uri: esUrl + event.eventType + '-' + event.eventId,
+          uri: esUrl + aggregateType + '-' + aggregateId,
           method: 'POST',
-          json: [event],
+          json: events,
           headers: headers,
           auth: auth
         }, function(error, response, body) {

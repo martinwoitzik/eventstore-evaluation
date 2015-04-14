@@ -4,7 +4,9 @@ var esCtrl = require('../es-controller.js');
 
 router.get('/', function(req, res, next) {
 
-  esCtrl.foo();
+  //esCtrl.populateSingleDomainEvent();
+  //esCtrl.populateMultipleDomainEvents();
+  //esCtrl.populateMassiveAmountOfDomainEvents();
 
   res.render('stream', {
   });
