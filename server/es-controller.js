@@ -82,15 +82,19 @@ var testES = {
     },
 
     pushDomainEvent: function(aggregateId, aggregateType, events) {
-        request({
-          uri: esUrl + aggregateType + '-' + aggregateId,
-          method: 'POST',
-          json: events,
-          headers: headers,
-          auth: auth
-        }, function(error, response, body) {
-          console.log(body);
-        });
+      request({
+        uri: esUrl + aggregateType + '-' + aggregateId,
+        method: 'POST',
+        json: events,
+        headers: headers,
+        auth: auth
+      }, function(error, response, body) {
+        console.log(body);
+      });
+    },
+
+    test: function() {
+
     }
 
 };
